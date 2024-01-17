@@ -13,9 +13,20 @@ namespace WebAPILearning.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult GetById(int id)
         {
             return Ok($"Retrieved the project {id}");
+        }
+
+        [HttpGet()]
+        [Route("/api/projects/{pid}/tickets")]
+        public IActionResult GetProjectTicket(int pid, [FromQuery] int tid)
+        {
+            if (tid == 0)
+            {
+                return Ok($"Reading all the tickets that belong to the project ${pid}");
+            }
+            return Ok($"Reading project #{pid} and ticket #{tid}");
         }
 
         [HttpPost]
