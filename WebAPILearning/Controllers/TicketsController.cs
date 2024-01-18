@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebAPILearning.Models;
 
 namespace WebAPILearning.Controllers
 {
@@ -19,13 +20,13 @@ namespace WebAPILearning.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post()
+        public IActionResult Post([FromBody] Ticket ticket)
         {
             return Ok("Creating a ticket");
         }
 
         [HttpPut]
-        public IActionResult Put()
+        public IActionResult Put([FromBody] Ticket ticket)
         {
             return Ok("Updating a ticket");
         }
