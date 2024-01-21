@@ -21,5 +21,7 @@ namespace WebAPILearning.Models
         [Ticket_EnsureDueDateForTicketOwner]
         [Ticket_EnsureDueDateIsInFuture]
         public DateTime? DueDate { get; set; }
+
+        public DateTime? EnteredDate { get; set; }
     }
 }

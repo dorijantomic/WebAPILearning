@@ -9,7 +9,7 @@ namespace WebAPILearning.ModelValidation
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var ticket = validationContext.ObjectInstance as Ticket;
-            if (ticket != null && ticket.TicketId == null)
+            if (ticket != null && ticket.TicketId == null && ticket.DueDate.HasValue)
             {
                 if (ticket.DueDate.Value < DateTime.Now)
                 {

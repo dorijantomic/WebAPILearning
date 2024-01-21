@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebAPILearning.Filters;
 using WebAPILearning.Models;
 
 namespace WebAPILearning.Controllers
@@ -21,6 +22,14 @@ namespace WebAPILearning.Controllers
 
         [HttpPost]
         public IActionResult Post([FromBody] Ticket ticket)
+        {
+            return Ok("Creating a ticket");
+        }
+
+        [HttpPost]
+        [Route("/api/v2/tickets")]
+        [Ticket_ValidateDatesActionFilter]
+        public IActionResult PostV2([FromBody] Ticket ticket)
         {
             return Ok("Creating a ticket");
         }
