@@ -2,7 +2,9 @@
 using DataStore.EF;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebAPILearning.Controllers
 {
@@ -18,15 +20,16 @@ namespace WebAPILearning.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(db.Projects.ToList());
+            List<Project> projects = await db.Projects.ToListAsync();
+            return Ok(projects);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var project = db.Projects.Find(id);
+            var project = await db.Projects.FindAsync(id);
             if (project == null)
             {
                 return NotFound();
@@ -36,33 +39,36 @@ namespace WebAPILearning.Controllers
 
         [HttpGet]
         [Route("/api/projects/{pid}/tickets")]
-        public IActionResult GetProjectTickets(int pId)
+        public async Task<IActionResult> GetProjectTickets(int pId)
         {
-            var tickets = db.Tickets.Where(t => t.ProjectId == pId).ToList();
-            if (tickets == null || tickets.Count <= 0) { return NotFound(); }
+            var tickets = await db.Tickets.Where(t => t.ProjectId == pId).ToListAsync();
+            if (tickets == null || tickets.Count <= 0)
+            {
+                return NotFound();
+            }
             return Ok(tickets);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Project project)
+        public async Task<IActionResult> Post([FromBody] Project project)
         {
             db.Projects.Add(project);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = project.ProjectId }, project);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Project project)
+        public async Task<IActionResult> Put(int id, Project project)
         {
             if (id != project.ProjectId) return BadRequest();
             db.Entry(project).State = EntityState.Modified;
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch
             {
-                if (db.Projects.Find(id) == null)
+                if (await db.Projects.FindAsync(id) == null)
                 {
                     return NotFound();
                 }
@@ -72,12 +78,12 @@ namespace WebAPILearning.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var project = db.Projects.Find(id);
+            var project = await db.Projects.FindAsync(id);
             if (project == null) return NotFound();
             db.Projects.Remove(project);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return Ok(project);
         }
     }
