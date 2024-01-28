@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Models;
+using DataStore.EF;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace WebAPILearning.Controllers
 {
@@ -6,45 +10,75 @@ namespace WebAPILearning.Controllers
     [Route("api/[controller]")]
     public class ProjectsController : ControllerBase
     {
+        private readonly BugsContext db;
+
+        public ProjectsController(BugsContext db)
+        {
+            this.db = db;
+        }
+
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("Retrieved all of the projects.");
+            return Ok(db.Projects.ToList());
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return Ok($"Retrieved the project {id}");
+            var project = db.Projects.Find(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return Ok(project);
         }
 
-        [HttpGet()]
+        [HttpGet]
         [Route("/api/projects/{pid}/tickets")]
-        public IActionResult GetProjectTicket(int pid, [FromQuery] int tid)
+        public IActionResult GetProjectTickets(int pId)
         {
-            if (tid == 0)
-            {
-                return Ok($"Reading all the tickets that belong to the project ${pid}");
-            }
-            return Ok($"Reading project #{pid} and ticket #{tid}");
+            var tickets = db.Tickets.Where(t => t.ProjectId == pId).ToList();
+            if (tickets == null || tickets.Count <= 0) { return NotFound(); }
+            return Ok(tickets);
         }
 
         [HttpPost]
-        public IActionResult Post()
+        public IActionResult Post([FromBody] Project project)
         {
-            return Ok("Successfully added a project.");
+            db.Projects.Add(project);
+            db.SaveChanges();
+            return CreatedAtAction(nameof(GetById), new { id = project.ProjectId }, project);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id)
+        public IActionResult Put(int id, Project project)
         {
-            return Ok($"Successfully updated project #{id}.");
+            if (id != project.ProjectId) return BadRequest();
+            db.Entry(project).State = EntityState.Modified;
+            try
+            {
+                db.SaveChanges();
+            }
+            catch
+            {
+                if (db.Projects.Find(id) == null)
+                {
+                    return NotFound();
+                }
+                throw;
+            }
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return Ok($"Successfully deleted project #{id}.");
+            var project = db.Projects.Find(id);
+            if (project == null) return NotFound();
+            db.Projects.Remove(project);
+            db.SaveChanges();
+            return Ok(project);
         }
     }
 }

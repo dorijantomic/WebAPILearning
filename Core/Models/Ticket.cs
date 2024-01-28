@@ -11,7 +11,7 @@ namespace Core.Models
         public int? TicketId { get; set; }
 
         [Required]
-        public string ProjectId { get; set; }
+        public int ProjectId { get; set; }
 
         public string Description { get; set; }
 
