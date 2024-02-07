@@ -37,8 +37,10 @@ namespace WebAPILearning
                 options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
-                options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
+                //options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
             });
+            services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +53,15 @@ namespace WebAPILearning
                 //create the in-memory database for dev environment
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
+
+                //Configure OpenAPI
+                app.UseSwagger();
+                app.UseSwaggerUI(
+                    options =>
+                    {
+                        options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1");
+                    }
+                    );
             }
 
             app.UseRouting();
