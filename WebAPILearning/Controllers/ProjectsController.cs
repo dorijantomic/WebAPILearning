@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace WebAPILearning.Controllers
 {
+    [ApiVersion("1.0")]
     [ApiController]
     [Route("api/[controller]")]
     public class ProjectsController : ControllerBase
@@ -22,8 +23,7 @@ namespace WebAPILearning.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            List<Project> projects = await db.Projects.ToListAsync();
-            return Ok(projects);
+            return Ok(await db.Projects.ToListAsync());
         }
 
         [HttpGet("{id}")]
@@ -31,9 +31,8 @@ namespace WebAPILearning.Controllers
         {
             var project = await db.Projects.FindAsync(id);
             if (project == null)
-            {
                 return NotFound();
-            }
+
             return Ok(project);
         }
 
@@ -43,9 +42,8 @@ namespace WebAPILearning.Controllers
         {
             var tickets = await db.Tickets.Where(t => t.ProjectId == pId).ToListAsync();
             if (tickets == null || tickets.Count <= 0)
-            {
                 return NotFound();
-            }
+
             return Ok(tickets);
         }
 
@@ -54,26 +52,31 @@ namespace WebAPILearning.Controllers
         {
             db.Projects.Add(project);
             await db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = project.ProjectId }, project);
+
+            return CreatedAtAction(nameof(GetById),
+                    new { id = project.ProjectId },
+                    project
+                );
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Project project)
         {
             if (id != project.ProjectId) return BadRequest();
+
             db.Entry(project).State = EntityState.Modified;
+
             try
             {
                 await db.SaveChangesAsync();
             }
             catch
             {
-                if (await db.Projects.FindAsync(id) == null)
-                {
+                if (db.Projects.Find(id) == null)
                     return NotFound();
-                }
                 throw;
             }
+
             return NoContent();
         }
 
@@ -82,8 +85,10 @@ namespace WebAPILearning.Controllers
         {
             var project = await db.Projects.FindAsync(id);
             if (project == null) return NotFound();
+
             db.Projects.Remove(project);
             await db.SaveChangesAsync();
+
             return Ok(project);
         }
     }

@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebAPI.Filters.V2;
 
-namespace WebAPILearning.Controllers
+namespace WebAPILearning.Controllers.V2
 {
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/tickets")]
     public class TicketsV2Controller : ControllerBase
     {
         private readonly BugsContext db;
@@ -34,6 +35,7 @@ namespace WebAPILearning.Controllers
             return Ok(ticket);
         }
 
+        [Ticket_EnsureDescriptionPresentActionFilter]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Ticket ticket)
         {
@@ -42,6 +44,7 @@ namespace WebAPILearning.Controllers
             return CreatedAtAction(nameof(GetById), new { id = ticket.TicketId }, ticket);
         }
 
+        [Ticket_EnsureDescriptionPresentActionFilter]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Ticket ticket)
         {

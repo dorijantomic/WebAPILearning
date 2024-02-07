@@ -2,6 +2,7 @@ using DataStore.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +32,13 @@ namespace WebAPILearning
                 });
             }
             services.AddControllers();
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
