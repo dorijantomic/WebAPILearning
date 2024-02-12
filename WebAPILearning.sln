@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataStore.EF", "DataStore.EF\DataStore.EF.csproj", "{DA940239-767B-4344-95C6-5C1CD79DC8E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Repository", "App.Repository\App.Repository.csproj", "{0388A934-450A-4D80-9606-00C98565D09A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Repository", "App.Repository\App.Repository.csproj", "{0388A934-450A-4D80-9606-00C98565D09A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Testing.Console", "App.Testing.Console\App.Testing.Console.csproj", "{6FD828B3-2EAA-49B8-9E5E-F58705AA45F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0388A934-450A-4D80-9606-00C98565D09A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0388A934-450A-4D80-9606-00C98565D09A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0388A934-450A-4D80-9606-00C98565D09A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FD828B3-2EAA-49B8-9E5E-F58705AA45F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FD828B3-2EAA-49B8-9E5E-F58705AA45F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FD828B3-2EAA-49B8-9E5E-F58705AA45F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FD828B3-2EAA-49B8-9E5E-F58705AA45F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace App.Repository.ApiClient
 {
-    internal class WebApiExecuter
+    public class WebApiExecuter : IWebApiExecuter
     {
         private readonly string baseUrl;
         private readonly HttpClient httpClient;
@@ -24,7 +24,7 @@ namespace App.Repository.ApiClient
 
         public async Task<T> InvokeGet<T>(string uri)
         {
-            return await httpClient.GetFromJsonAsync<T>(uri);
+            return await httpClient.GetFromJsonAsync<T>(GetUrl(uri));
         }
 
         public async Task<T> InvokePost<T>(string uri, T obj)
