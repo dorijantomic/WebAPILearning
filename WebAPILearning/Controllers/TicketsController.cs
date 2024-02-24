@@ -10,11 +10,11 @@ namespace WebAPILearning.Controllers
     [ApiVersion("1.0")]
     [ApiController]
     [Route("api/[controller]")]
-    public class TicketsV2Controller : ControllerBase
+    public class TicketsController : ControllerBase
     {
         private readonly BugsContext db;
 
-        public TicketsV2Controller(BugsContext db)
+        public TicketsController(BugsContext db)
         {
             this.db = db;
         }

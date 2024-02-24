@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace WebAPILearning
             this._env = env;
         }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             if (_env.IsDevelopment())
@@ -31,7 +34,9 @@ namespace WebAPILearning
                     options.UseInMemoryDatabase("Bugs");
                 });
             }
+
             services.AddControllers();
+
             services.AddApiVersioning(options =>
             {
                 options.ReportApiVersions = true;
@@ -39,11 +44,13 @@ namespace WebAPILearning
                 options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
                 //options.ApiVersionReader = new HeaderApiVersionReader("X-API-Version");
             });
+
             services.AddVersionedApiExplorer(options => options.GroupNameFormat = "'v'VVV");
+
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My Web API v1", Version = "version 1" });
-                options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My Web API v2", Version = "version 2" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "My Web API v1", Version = "version 1" });
+                options.SwaggerDoc("v2", new OpenApiInfo { Title = "My Web API v2", Version = "version 2" });
             });
         }
 
@@ -54,19 +61,18 @@ namespace WebAPILearning
             {
                 app.UseDeveloperExceptionPage();
 
-                //create the in-memory database for dev environment
+                //Create the in-memory database for dev environment
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
 
                 //Configure OpenAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(
-                    options =>
-                    {
-                        options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1");
-                        options.SwaggerEndpoint("/swagger/v2/swagger.json", "WebAPI v2");
-                    }
-                    );
+                        options =>
+                        {
+                            options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1");
+                            options.SwaggerEndpoint("/swagger/v2/swagger.json", "WebAPI v2");
+                        });
             }
 
             app.UseRouting();

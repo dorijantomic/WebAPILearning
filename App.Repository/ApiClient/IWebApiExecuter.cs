@@ -4,7 +4,7 @@ namespace App.Repository.ApiClient
 {
     public interface IWebApiExecuter
     {
-        Task InvokeDelete<T>(string uri);
+        Task InvokeDelete(string uri);
 
         Task<T> InvokeGet<T>(string uri);
 
